@@ -7,18 +7,45 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <button type="button" title="record" id="recordButton" class="icon-button">
+  <div class="popup">
+    <div class="btnContainer">
+      <button type="button" title="record" id="recordButton" class="icon-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+          <circle cx="12" cy="12" r="8" fill="#d9534f" />
+        </svg>
+      </button>
+      <button type="button" title="stop" id="stopButton" class="icon-button" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+          <rect x="6" y="6" width="12" height="12" fill="#5bc0de" />
+        </svg>
+      </button>
+      <button type="button" title="download" id="downloadButton" class="download-button" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M5 20h14v-2H5v2zm7-18l-7 7h4v6h6v-6h4l-7-7z"/>
+        </svg>
+      </button>
+
+      <div id="analyzerContainer" class="iconButton">
+        <canvas id="soundwaveCanvas"></canvas>
+      </div>
+    </div>
+    
+    <div id="fileContainer">
+      <canvas id="waveformCanvas" width="100%" height="100px"></canvas>
+    </div>
+
+    <button type="button" title="play" id="playButton">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-        <circle cx="12" cy="12" r="8" fill="#d9534f" />
+        <path d="M8 5v14l11-7z"/>
       </svg>
     </button>
-    <button type="button" title="stop" id="stopButton" class="icon-button">
+    <button type="button" title="pause" id="pauseButton">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-        <rect x="6" y="6" width="12" height="12" fill="#5bc0de" />
+        <rect x="6" y="5" width="4" height="14"/>
+        <rect x="14" y="5" width="4" height="14"/>
       </svg>
     </button>
-    <p id="status"></p>
+     <p id="timer">00:00:00</p> 
   </div>
   <script src="background.js"></script>
 </body>

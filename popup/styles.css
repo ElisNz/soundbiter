@@ -1,4 +1,4 @@
-/* General reset */
+
 body {
   margin: 0;
   padding: 0;
@@ -6,24 +6,58 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f4f4f9;
   font-family: Arial, sans-serif;
+} 
+
+.popup {
+  width: 300px;
+  padding-inline: 30px;
+  padding-block: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Container styling */
-.container {
+
+.btnContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
-/* Button styling */
+.download-button {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  margin-inline: 15px;
+  background-color: #0056b3;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color transform 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.download-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.download-button svg {
+  width: 20px;
+  height: 20px;
+  fill: black;
+}
+
+
 .icon-button {
   background: none;
   border: none;
@@ -47,8 +81,84 @@ body {
   transform: none;
 }
 
-/* SVG Icon styling */
+#playButton {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff79;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: none;
+  bottom: 10px;
+  right: 5%;
+}
+#playButton:hover {
+  transform: scale(1.05);
+}
+#playButton svg {
+  width: 40px;
+  height: 30px;
+  fill: #63be5b;
+}
+
+#pauseButton {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff79;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: none;
+  bottom: 10px;
+  right: 5%;
+}
+#pauseButton:hover {
+  transform: scale(1.05);
+}
+#pauseButton svg {
+  width: 40px;
+  height: 30px;
+  fill: #f44336;
+}
+
 .icon {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
+}
+
+#soundwaveCanvas {
+  width: 100%;
+  height: 100px;
+  background-color: rgba(0, 0, 0, 0);
+  margin-top: 10px;
+  padding: 10px;
+}
+
+#waveformCanvas {
+  width: 100%;
+  height: 100px;
+  background-color: rgba(0, 0, 255, 0.21);
+}
+
+#fileContainer {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  margin-top: 10px;
+  padding: 10px;
+}
+#fileContainer a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+} #fileContainer a:active {
+  cursor: grabbing;
 }

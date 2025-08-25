@@ -1,4 +1,4 @@
-// Select the buttons and audio element
+/* // Select the buttons and audio element
 const recordButton = document.getElementById('recordButton');
 const stopButton = document.getElementById('stopButton');
 const browserAudio = document.getElementById('browserAudio');
@@ -34,15 +34,15 @@ function startRecording(stream) {
 
   mediaRecorder.start();
   console.log('Recording started.');
-}
+} */
 
 // Stop recording
-function stopRecording() {
+/* function stopRecording() {
   if (mediaRecorder) {
     mediaRecorder.stop();
     console.log('Recording stopped.');
   }
-}
+} */
 
 
 /* // Variables for MediaRecorder and audio data
@@ -81,7 +81,7 @@ mediaRecorder.addEventListener('stop', () => {
 }); */
 
 // Listen for messages from the background script
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+/* chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log(request.action);
   if (request.action === 'startRecording') {
     // Start recording when the message is received
@@ -100,26 +100,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else {
       sendResponse({ action: 'recordingStatus', status: 'No recording in progress.' });
     }
-  }
-});
-
-/* // Start recording when the "Record" button is clicked
-recordButton.addEventListener('click', () => {
-  if (mediaRecorder && mediaRecorder.state === 'inactive') {
-    audioChunks = []; // Clear previous recordings
-    mediaRecorder.start();
-    alert('Recording started...');
-  } else {
-    console.log('MediaRecorder is not ready or already recording.');
-  }
-}); */
-
-/* // Stop recording when the "Stop" button is clicked
-stopButton.addEventListener('click', () => {
-  if (mediaRecorder && mediaRecorder.state === 'recording') {
-    mediaRecorder.stop();
-    alert('Recording stopped.');
-  } else {
-    console.log('No recording in progress.');
   }
 }); */
