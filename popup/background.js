@@ -1,6 +1,6 @@
 const recordButton = document.getElementById('recordButton');
 const stopButton = document.getElementById('stopButton');
-const downloadButton = document.getElementById('downloadButton');
+// const downloadButton = document.getElementById('downloadButton');
 const playButton = document.getElementById('playButton');
 const pauseButton = document.getElementById('pauseButton');
 const fileContainer = document.getElementById('fileContainer');
@@ -65,7 +65,7 @@ function maintainTabAudio(stream) {
   source.connect(output.destination);
 };
 
-function createSoundwave(stream)  {
+function runAnalyzerBar(stream)  {
   
   const source = audioCtx.createMediaStreamSource(stream);
 
@@ -116,7 +116,7 @@ async function displayWaveform(audioBlob) {
   // Clear the canvas
   canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
   canvasCtx.beginPath();
-  canvasCtx.lineWidth = 2;
+  canvasCtx.lineWidth = 8;
   canvasCtx.strokeStyle = 'black';
 
   
@@ -149,7 +149,7 @@ function startAudioCapture() {
     }
 
     maintainTabAudio(stream); 
-    createSoundwave(stream); 
+    runAnalyzerBar(stream); 
 
     audioStream = stream;
 
@@ -173,6 +173,7 @@ function managePlayButton(url) {
       pauseButton.style.display = 'none';
       clearInterval(timerInterval);
     });
+
     audio.play();
 
     pauseButton.disabled = false; 
@@ -231,16 +232,11 @@ function saveAudioFile(url) {
   a.addEventListener('dragstart', (event) => {
     event.dataTransfer.setData('DownloadURL', `${a.type}:${a.download}:${url}`);
   });
-  
 
-  downloadButton.disabled = false; 
-  
-  downloadButton.addEventListener('click', () => {
-    a.click();
+  a.addEventListener('drop' , (event) => {
     URL.revokeObjectURL(url);
-    downloadButton.disabled = true;
     document.body.removeChild(a);
-  }, { once: true }); 
+  });
 }
 
 

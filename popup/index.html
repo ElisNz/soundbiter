@@ -19,32 +19,24 @@
           <rect x="6" y="6" width="12" height="12" fill="#5bc0de" />
         </svg>
       </button>
-      <button type="button" title="download" id="downloadButton" class="download-button" disabled>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M5 20h14v-2H5v2zm7-18l-7 7h4v6h6v-6h4l-7-7z"/>
-        </svg>
-      </button>
-
-      <div id="analyzerContainer" class="iconButton">
-        <canvas id="soundwaveCanvas"></canvas>
-      </div>
+        <button type="button" title="play" id="playButton" class="icon-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </button>
+        <button type="button" title="pause" id="pauseButton" class="icon-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+            <rect x="6" y="5" width="4" height="14"/>
+            <rect x="14" y="5" width="4" height="14"/>
+          </svg>
+        </button>
     </div>
     
     <div id="fileContainer">
-      <canvas id="waveformCanvas" width="100%" height="100px"></canvas>
+      <canvas id="soundwaveCanvas"></canvas>
+      <canvas id="waveformCanvas"></canvas>
     </div>
-
-    <button type="button" title="play" id="playButton">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-        <path d="M8 5v14l11-7z"/>
-      </svg>
-    </button>
-    <button type="button" title="pause" id="pauseButton">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-        <rect x="6" y="5" width="4" height="14"/>
-        <rect x="14" y="5" width="4" height="14"/>
-      </svg>
-    </button>
+    
      <p id="timer">00:00:00</p> 
   </div>
   <script src="background.js"></script>
