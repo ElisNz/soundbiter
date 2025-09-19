@@ -4,7 +4,21 @@ const stopButton = document.getElementById('stopButton');
 const playButton = document.getElementById('playButton');
 const pauseButton = document.getElementById('pauseButton');
 const fileContainer = document.getElementById('fileContainer');
+const consistentUIButton = document.getElementById('open-ui');
 const timer = document.getElementById('timer');
+
+
+let audioStream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let currentAudio = null;
+
+const canvas = document.getElementById('waveformCanvas');
+const canvasCtx = canvas.getContext('2d');
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+const audioCtx = new AudioContext();
+const analyser = audioCtx.createAnalyser();
 
 const takeTime = (audio) => {
   let timerInterval = null;
@@ -46,18 +60,10 @@ const takeTime = (audio) => {
   return timerInterval;
 };
 
-
-let audioStream = null;
-let mediaRecorder = null;
-let recordedChunks = [];
-
-const canvas = document.getElementById('waveformCanvas');
-const canvasCtx = canvas.getContext('2d');
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-const audioCtx = new AudioContext();
-const analyser = audioCtx.createAnalyser();
-
+// Send audio data to the content script
+function sendAudioData(tabId) {
+  chrome.tabs.sendMessage(tabId, { action: 'receiveAudio', audio: currentAudio });
+}
 
 function maintainTabAudio(stream) {
   const output = new AudioContext();
@@ -141,7 +147,7 @@ async function displayWaveform(audioBlob) {
 }
 
 function startAudioCapture() {
-
+  alert('capture started');
   chrome.tabCapture.capture({ audio: true, video: false }, (stream) => {
     if (chrome.runtime.lastError || !stream) {
       console.error('Error capturing audio:', chrome.runtime.lastError?.message);
@@ -205,12 +211,13 @@ function startRecording(stream) {
   mediaRecorder.onstop = () => {   
     const audioBlob = new Blob(recordedChunks, { type: 'audio/webm' });
     const url = URL.createObjectURL(audioBlob); 
+    currentAudio = audioBlob;
     recordedChunks = [];
+    alert('recording stopped');
     saveAudioFile(url);
     clearInterval(timerInterval);
     
     displayWaveform(audioBlob);
-    
 
     managePlayButton(url);
   };
@@ -255,6 +262,7 @@ function stopAudioCapture() {
   }
 }
 
+//TODO: use listeners for messegages from content script UI instead of these button listeners
 recordButton.addEventListener('click', () => {
 
   recordButton.disabled = true; 
@@ -269,4 +277,25 @@ stopButton.addEventListener('click', () => {
   recordButton.disabled = false;
 
   stopAudioCapture();
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'record') {
+    recordButton.disabled = true; 
+    stopButton.disabled = false;
+    alert('recording requested');
+    startAudioCapture();
+  } else if (message.action === 'stop') {
+    if(!audioStream) { return; }
+    alert('stop requested');
+    recordButton.disabled = false;
+    stopAudioCapture();
+    sendAudioData(sender.tab.id);
+  }
+});
+
+consistentUIButton.addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { action: 'renderUI' });
+  });
 });
