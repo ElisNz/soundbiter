@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SoundBiter",
   "description": "A lightweight extension to capture and manage audio snippets from web pages.",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -25,13 +25,6 @@
       "128": "icons/icon128.png"
     }
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content_scripts/content.js"],
-      "css": ["popup/styles.css"]
-    }
-  ],
   "background": {
     "service_worker": "popup/background.js"
   }
