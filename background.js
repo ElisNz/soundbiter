@@ -1,28 +1,11 @@
-const recordButton = document.getElementById('recordButton');
-const stopButton = document.getElementById('stopButton');
-// const downloadButton = document.getElementById('downloadButton');
-const playButton = document.getElementById('playButton');
-const pauseButton = document.getElementById('pauseButton');
-const fileContainer = document.getElementById('fileContainer');
-const consistentUIButton = document.getElementById('open-ui');
-const timer = document.getElementById('timer');
-
-
 let audioStream = null;
 let mediaRecorder = null;
 let recordedChunks = [];
 let currentAudio = null;
 
-const canvas = document.getElementById('waveformCanvas');
-const canvasCtx = canvas.getContext('2d');
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-const audioCtx = new AudioContext();
-const analyser = audioCtx.createAnalyser();
 
 const takeTime = (audio) => {
   let timerInterval = null;
-  
   
   if(!audio) {
     timer.textContent = '00:00:00';
@@ -80,28 +63,17 @@ function runAnalyzerBar(stream)  {
   analyser.fftSize = 2048;
   const bufferLength = analyser.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
-  const canvas = document.getElementById('soundwaveCanvas');
-  const canvasCtx = canvas.getContext('2d');
   
-  canvas.width = window.innerWidth;
-  canvas.height = 100;
-  canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-  
-
   function draw() {
     requestAnimationFrame(draw);
     analyser.getByteFrequencyData(dataArray);
-    canvasCtx.fillStyle = canvas.style.backgroundColor || 'white'; // Use the canvas background color or default to white
-    canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const barWidth = (canvas.width / bufferLength) * 2.5;
+
     let barHeight;
     let x = 0;
 
     for (let i = 0; i < bufferLength; i++) {
       barHeight = dataArray[i] / 2;
-      canvasCtx.fillStyle = `rgb(${barHeight + 100},50,50)`;
-      canvasCtx.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight);
       x += barWidth + 1;
     }
   }
@@ -109,42 +81,6 @@ function runAnalyzerBar(stream)  {
   draw();
 }
 
-async function displayWaveform(audioBlob) {
-  
-  // Decode the audio data from the Blob
-  const arrayBuffer = await audioBlob.arrayBuffer();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-  // Get the audio data
-  const channelData = audioBuffer.getChannelData(0); // Use the first channel
-  const sampleRate = audioBuffer.sampleRate;
-
-  // Clear the canvas
-  canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-  canvasCtx.beginPath();
-  canvasCtx.lineWidth = 8;
-  canvasCtx.strokeStyle = 'black';
-
-  
-  // Draw the waveform
-  const width = canvas.width;
-  const height = canvas.height;
-  const step = Math.ceil(channelData.length / width); // Number of samples per pixel
-  const amp = height / 2; // Amplitude scaling factor
-
-  canvasCtx.beginPath();
-  canvasCtx.moveTo(0, amp); // Start at the middle of the canvas
-
-  for (let i = 0; i < width; i++) {
-    const min = Math.min(...channelData.slice(i * step, (i + 1) * step));
-    const max = Math.max(...channelData.slice(i * step, (i + 1) * step));
-    canvasCtx.lineTo(i, amp + min * amp);
-    canvasCtx.lineTo(i, amp + max * amp);
-  }
-
-  canvasCtx.strokeStyle = 'black';
-  canvasCtx.stroke();
-}
 
 function startAudioCapture() {
   alert('capture started');
@@ -230,8 +166,8 @@ function saveAudioFile(url) {
   const a = document.createElement('a');
 
   a.href = url;
-  a.download = 'recorded_audio.webm'; // Change extension to .wav if needed
-  a.type = 'audio/webm';
+  a.download = 'recorded_audio.wav';
+  a.type = 'audio/wav';
   a.draggable = true;
   
   fileContainer.appendChild(a);
@@ -240,7 +176,7 @@ function saveAudioFile(url) {
     event.dataTransfer.setData('DownloadURL', `${a.type}:${a.download}:${url}`);
   });
 
-  a.addEventListener('drop' , (event) => {
+  a.addEventListener('drop' , () => {
     URL.revokeObjectURL(url);
     document.body.removeChild(a);
   });
@@ -262,40 +198,19 @@ function stopAudioCapture() {
   }
 }
 
-//TODO: use listeners for messegages from content script UI instead of these button listeners
-recordButton.addEventListener('click', () => {
-
-  recordButton.disabled = true; 
-  stopButton.disabled = false;
-
-  startAudioCapture();
-});
-
-stopButton.addEventListener('click', () => {
-  if(!audioStream) { return; }
-
-  recordButton.disabled = false;
-
-  stopAudioCapture();
-});
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'record') {
-    recordButton.disabled = true; 
-    stopButton.disabled = false;
-    alert('recording requested');
-    startAudioCapture();
+    //startAudioCapture();
+    sendResponse({ action: 'recordingStarted' });
   } else if (message.action === 'stop') {
     if(!audioStream) { return; }
-    alert('stop requested');
-    recordButton.disabled = false;
+
     stopAudioCapture();
     sendAudioData(sender.tab.id);
   }
+
+  return true; 
 });
 
-consistentUIButton.addEventListener('click', () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, { action: 'renderUI' });
-  });
-});
+
+
