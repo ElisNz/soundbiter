@@ -223,8 +223,8 @@ function saveAudioFile(url) {
   const a = document.createElement('a');
 
   a.href = url;
-  a.download = 'recorded_audio.webm'; // Change extension to .wav if needed
-  a.type = 'audio/webm';
+  a.download = 'recorded_audio.wav'; // Change extension to .wav if needed
+  a.type = 'audio/wav';
   a.draggable = true;
   
   fileContainer.appendChild(a);
@@ -233,7 +233,7 @@ function saveAudioFile(url) {
     event.dataTransfer.setData('DownloadURL', `${a.type}:${a.download}:${url}`);
   });
 
-  a.addEventListener('drop' , (event) => {
+  a.addEventListener('drop' , () => {
     URL.revokeObjectURL(url);
     document.body.removeChild(a);
   });
